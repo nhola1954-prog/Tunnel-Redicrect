@@ -51,7 +51,7 @@ p{margin:0;font-size:13px;color:#6c7890;line-height:1.5}
       var url = (txt || '').trim().split(/\s+/)[0];
       if (!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/i.test(url) ||
     url.indexOf('placeholder') !== -1) {
-  fail('Máy chủ chưa sẵn sàng. Vui lòng thử lại sau.');
+  fail('Máy chủ chưa sẵn sàng. URL nhận: ' + url);
   return;
       }
       var target = url + window.location.pathname + window.location.search + window.location.hash;
