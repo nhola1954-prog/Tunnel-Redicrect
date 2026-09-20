@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Đang kết nối...</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#08090c;color:#a4b0c4;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:24px;text-align:center}
+.box{max-width:340px}
+.spin{width:36px;height:36px;margin:0 auto 20px;
+  border:3px solid rgba(79,143,255,.15);border-top-color:#4f8fff;
+  border-radius:50%;animation:sp .85s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+h1{font-size:16px;font-weight:500;color:#eef2f8;margin:0 0 6px}
+p{margin:0;font-size:13px;color:#6c7890;line-height:1.5}
+.err .spin{display:none}
+.err h1{color:#ff5a5a}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box" id="box">
+    <div class="spin"></div>
+    <h1>Đang kết nối</h1>
+    <p>Vui lòng đợi trong giây lát...</p>
+  </div>
+</div>
+<script>
+(function() {
+  var GIST_RAW = 'https://gist.githubusercontent.com/nhola1954-prog/ad3b9fa5ec58de07bfd78efd433eaef3/raw/tunnel-url.txt';
+
+  function fail(msg) {
+    var box = document.getElementById('box');
+    box.classList.add('err');
+    box.querySelector('h1').textContent = 'Không thể kết nối';
+    box.querySelector('p').textContent = msg || 'Vui lòng thử lại sau ít phút.';
+  }
+
+  fetch(GIST_RAW + '?_=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(function(txt) {
+      var url = (txt || '').trim().split(/\s+/)[0];
+      if (!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/i.test(url)) {
+        throw new Error('URL không hợp lệ');
+      }
+      var target = url + window.location.pathname + window.location.search + window.location.hash;
+      window.location.replace(target);
+    })
+    .catch(function(e) {
+      fail('Không lấy được địa chỉ máy chủ.');
+    });
+})();
+</script>
+</body>
+</html>
